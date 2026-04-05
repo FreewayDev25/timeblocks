@@ -1,0 +1,52 @@
+timeblocks V1
+
+But :
+- prototype local mono-utilisateur
+- une seule semaine
+- blocs de 1 heure
+- tâches colorées
+- clic / glisser pour remplir
+- mode effacer
+- sauvegarde locale navigateur
+
+V2 plus tard :
+- 30 min
+- puis 15 min
+- plusieurs plannings
+- backend réel
+- base de données
+- comptes utilisateur
+
+TIMEBLOCKS V3
+
+STACK
+- Python 3.12
+- Flask
+- HTML / CSS / JS
+- LocalStorage
+
+COMMANDES
+- Activer venv :
+  .\.venv\Scripts\Activate.ps1
+
+- Lancer app :
+  python app.py
+
+STRUCTURE
+- app.py → backend Flask
+- templates/index.html → UI
+- static/styles.css → style
+- static/app.js → logique
+
+FONCTIONNEL V3
+- planning horizontal
+- drag OK
+- effacement OK
+- sauvegarde localStorage OK
+- tooltip OK
+
+PROBLÈMES CONNUS
+- UI pas adaptée pour 30min / 15min
+
+PROCHAINE ÉTAPE
+- redesign UI (grille fine)

@@ -50,3 +50,30 @@ PROBLÈMES CONNUS
 
 PROCHAINE ÉTAPE
 - redesign UI (grille fine)
+
+V4 FINAL
+
+Fonctionnalités :
+- planning horizontal 15 min
+- ajout de tâche
+- sélection
+- drag libre
+- mode bloc
+- effacement
+- tooltip précis
+- stats MVP
+- barre globale planifié / restant
+
+Décisions :
+- topbar compacte sur une ligne
+- pas de barre segmentée pour l’instant
+- pas d’UI spéciale multi-thèmes
+- V4 validée comme base MVP
+
+À améliorer plus tard :
+- UI couleurs
+- stats visuelles (barres)
+- éventuelle barre segmentée avec "Autres"
+- auth / compte utilisateur
+- sauvegarde backend / DB
+- plusieurs plannings

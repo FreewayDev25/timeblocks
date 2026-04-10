@@ -3,76 +3,72 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>timeblocks V3</title>
+  <title>timeblocks V4</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
 </head>
 <body>
   <header class="topbar">
-    <div>
-      <h1>Timeblocks V3</h1>
+    <div class="topbar-left">
+      <h1>Timeblocks V4</h1>
+      <div class="account-slot">TD</div>
+    </div>
+
+    <div class="topbar-center">
+      <input
+        id="task-name"
+        name="task-name"
+        type="text"
+        maxlength="40"
+        placeholder="Nom de la tâche"
+        required
+      />
+
+      <input
+        id="task-color"
+        name="task-color"
+        type="color"
+        value="#4f46e5"
+        required
+      />
+
+      <button id="add-task-btn" type="button" class="btn btn-primary btn-add-topbar">
+        Ajouter
+      </button>
     </div>
 
     <div class="topbar-actions">
       <div id="current-selection" class="topbar-selection">
         Aucune tâche sélectionnée
       </div>
-    </div>
-    
+
       <button id="eraser-btn" class="btn btn-secondary" type="button">
         Mode effacer : OFF
       </button>
 
+      <button id="block-mode-btn" class="btn btn-secondary" type="button">
+        Mode bloc : OFF
+      </button>
+
       <button id="save-btn" class="btn" type="button">Sauvegarder</button>
+
       <button id="clear-planning-btn" class="btn btn-danger" type="button">
         Vider le planning
       </button>
     </div>
   </header>
 
-  <main class="layout">
-    <aside class="sidebar">
-      <section class="panel">
-        <h2>Liste de tâches</h2>
-
-        <form id="task-form" class="task-form-compact">
-          <input
-            id="task-name"
-            name="task-name"
-            type="text"
-            maxlength="40"
-            placeholder="Nom de la tâche"
-            required
-          />
-
-          <div class="task-form-row">
-            <input
-              id="task-color"
-              name="task-color"
-              type="color"
-              value="#4f46e5"
-              required
-            />
-
-            <button type="submit" class="btn btn-primary btn-add-task">
-              Ajouter
-            </button>
-          </div>
-        </form>
-
-        <div class="tasks-window">
-          <div id="tasks-list" class="tasks-list"></div>
-        </div>
-      </section>
-    </aside>
-
+  <main class="layout-v4">
     <section class="planner-section">
       <div class="planner-wrapper">
-        <table class="planner planner-horizontal" id="planner">
+        <table class="planner planner-horizontal planner-15" id="planner">
           <thead>
             <tr>
               <th class="day-col sticky-head sticky-left">Jours \\ Heures</th>
+
               {% for hour in hours %}
-                <th class="sticky-head hour-head">{{ "%02d"|format(hour) }}</th>
+                <th class="hour-group sticky-head" colspan="4">
+                  {{ "%02d"|format(hour) }}
+                </th>
               {% endfor %}
             </tr>
           </thead>
@@ -82,18 +78,48 @@
               {% set day_index = loop.index0 %}
               <tr>
                 <th class="day-col sticky-left">{{ day }}</th>
+
                 {% for hour in hours %}
-                  <td
-                    class="cell"
-                    data-day-index="{{ day_index }}"
-                    data-hour="{{ hour }}"
-                    title="{{ day }} - {{ '%02d:00'|format(hour) }}"
-                  ></td>
+                  {% for quarter in [0, 15, 30, 45] %}
+                    <td
+                      class="cell quarter-cell"
+                      data-day-index="{{ day_index }}"
+                      data-hour="{{ hour }}"
+                      data-quarter="{{ quarter }}"
+                      title="{{ day }} - {{ '%02d'|format(hour) }}:{{ '%02d'|format(quarter) }}"
+                    ></td>
+                  {% endfor %}
                 {% endfor %}
               </tr>
             {% endfor %}
           </tbody>
         </table>
+      </div>
+    </section>
+
+    <section class="tasks-bottom panel">
+      <h2>Liste de tâches</h2>
+
+      <div class="tasks-window-bottom">
+        <div id="tasks-list" class="tasks-list"></div>
+      </div>
+
+      <div class="stats-panel">
+        <h2>Répartition de la semaine</h2>
+
+        <div class="week-summary" id="week-summary">
+          <div class="week-summary-text">
+            <span id="planned-time">Planifié : 00h00 / 168h00</span>
+            <span id="remaining-time">Restant : 168h00</span>
+            <span id="planned-percent">0.0%</span>
+          </div>
+
+          <div class="week-progress">
+            <div id="week-progress-fill" class="week-progress-fill"></div>
+          </div>
+        </div>
+
+        <div id="stats-list" class="stats-list"></div>
       </div>
     </section>
   </main>

@@ -97,30 +97,42 @@
       </div>
     </section>
 
-    <section class="tasks-bottom panel">
-      <h2>Liste de tâches</h2>
+    <section class="dashboard-bottom panel">
+      <div class="dashboard-top">
+        <section class="dashboard-card">
+          <h2>Liste de tâches</h2>
 
-      <div class="tasks-window-bottom">
-        <div id="tasks-list" class="tasks-list"></div>
+          <div class="tasks-window-bottom">
+            <div id="tasks-list" class="tasks-list"></div>
+          </div>
+        </section>
+
+        <section class="dashboard-card">
+          <h2>Statistique</h2>
+
+          <div class="stats-window-side">
+            <div id="stats-list" class="stats-list"></div>
+          </div>
+        </section>
       </div>
 
-      <div class="stats-panel">
-        <h2>Répartition de la semaine</h2>
+      <section class="dashboard-full">
+        <div class="stats-panel">
+          <h2>Résumé de la semaine</h2>
 
-        <div class="week-summary" id="week-summary">
-          <div class="week-summary-text">
-            <span id="planned-time">Planifié : 00h00 / 168h00</span>
-            <span id="remaining-time">Restant : 168h00</span>
-            <span id="planned-percent">0.0%</span>
-          </div>
+          <div class="week-summary" id="week-summary">
+            <div class="week-summary-text">
+              <span id="planned-time">Planifié : 00h00 / 168h00</span>
+              <span id="remaining-time">Restant : 168h00</span>
+              <span id="planned-percent">0.0%</span>
+            </div>
 
-          <div class="week-progress">
-            <div id="week-progress-fill" class="week-progress-fill"></div>
+            <div class="week-progress">
+              <div id="week-progress-fill" class="week-progress-fill"></div>
+            </div>
           </div>
         </div>
-
-        <div id="stats-list" class="stats-list"></div>
-      </div>
+      </section>
     </section>
   </main>
 

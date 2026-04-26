@@ -18,6 +18,8 @@
 
 html,
 body {
+  height: 100%;
+  overflow: hidden;
   margin: 0;
   padding: 0;
   background: var(--bg);
@@ -39,7 +41,7 @@ p {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 10px;
+  padding: 4px 8px;
   border-bottom: 1px solid var(--border);
   background: var(--panel);
   position: sticky;
@@ -65,7 +67,7 @@ p {
 
 .account-slot {
   width: 32px;
-  height: 32px;
+  height: 28px;
   border: 2px solid #ef4444;
   border-radius: 999px;
   display: flex;
@@ -86,8 +88,8 @@ p {
 }
 
 .topbar-center input[type="text"] {
-  width: 180px;
-  height: 32px;
+  width: 130px;
+  height: 28px;
   padding: 6px 10px;
   border-radius: 8px;
   border: 1px solid var(--border);
@@ -98,7 +100,7 @@ p {
 
 .topbar-center input[type="color"] {
   width: 34px;
-  height: 32px;
+  height: 28px;
   border-radius: 8px;
   border: 1px solid var(--border);
   background: #0e1216;
@@ -107,7 +109,7 @@ p {
 }
 
 .btn-add-topbar {
-  width: 100px;
+  width: 60px;
   height: 32px;
   margin: 0;
   padding: 0 8px;
@@ -133,7 +135,7 @@ p {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  height: 32px;
+  height: 28px;
   padding: 0 10px;
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -160,8 +162,10 @@ p {
 .layout-v4 {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  padding: 10px 8px 12px;
+  gap: 6px;
+  padding: 6px 8px 8px;
+  height: calc(100vh - 48px);
+  overflow: hidden;
 }
 
 .panel {
@@ -177,6 +181,7 @@ p {
 .panel h2 {
   font-size: 13px;
   margin-bottom: 6px;
+  color: var(--muted);
 }
 
 input[type="text"] {
@@ -215,7 +220,7 @@ input[type="color"] {
 }
 
 .topbar .btn {
-  height: 32px;
+  height: 28px;
   padding: 0 10px;
   font-size: 11px;
   display: inline-flex;
@@ -252,7 +257,7 @@ input[type="color"] {
 .tasks-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
 }
 
 .task-item {
@@ -260,8 +265,6 @@ input[type="color"] {
   grid-template-columns: 18px 1fr auto;
   align-items: center;
   gap: 10px;
-  min-height: 42px;
-  padding: 8px 12px;
   border: 1px solid var(--border);
   background: #2e3035;
   border-radius: 12px;
@@ -281,7 +284,7 @@ input[type="color"] {
 }
 
 .task-name {
-  font-size: 14px;
+  font-size: 12px;
   line-height: 1.15;
   word-break: break-word;
 }
@@ -301,27 +304,78 @@ input[type="color"] {
 }
 
 .tasks-window-bottom {
-  height: 180px;
+  height: 116px;
   overflow-y: auto;
   overflow-x: hidden;
   border: 1px solid var(--border);
   border-radius: 12px;
   background: #18191a;
-  padding: 6px;
+  padding: 4px;
+}
+
+.dashboard-bottom {
+  width: 100%;
+  min-height: 0;
+  padding: 6px 10px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.dashboard-top {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: start;
+  width: 100%;
+}
+
+.dashboard-card {
+  min-width: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  color: var(--text);
+}
+
+.dashboard-card h2 {
+  margin: 0 0 4px 0;
+  padding-left: 2px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.dashboard-full {
+  margin-top: 4px;
+  padding-top: 0;
+  border-top: 0;
+  width: 100%;
+}
+
+.stats-window-side {
+  height: 116px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #18191a;
+  padding: 4px;
 }
 
 .stats-panel {
-  margin-top: 12px;
-  padding-top: 10px;
-  border-top: 1px solid var(--border);
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
 }
 
 .week-summary {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 12px;
-  padding: 10px;
+  gap: 4px;
+  margin-bottom: 4px;
+  padding: 6px;
   border: 1px solid var(--border);
   border-radius: 10px;
   background: #20242b;
@@ -330,15 +384,15 @@ input[type="color"] {
 .week-summary-text {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 10px;
   flex-wrap: wrap;
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text);
 }
 
 .week-progress {
   width: 100%;
-  height: 14px;
+  height: 8px;
   border-radius: 999px;
   background: #11151a;
   overflow: hidden;
@@ -355,7 +409,7 @@ input[type="color"] {
 .stats-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
 }
 
 .stat-item {
@@ -363,10 +417,15 @@ input[type="color"] {
   grid-template-columns: 16px 1fr auto auto;
   align-items: center;
   gap: 10px;
-  padding: 8px 10px;
   border: 1px solid var(--border);
   border-radius: 10px;
   background: #23262d;
+}
+
+.task-item,
+.stat-item {
+  min-height: 20px;
+  padding: 2px 8px;
 }
 
 .stat-color {
@@ -377,8 +436,8 @@ input[type="color"] {
 }
 
 .stat-name {
-  font-size: 13px;
-  color: var(--text);
+  font-size: 12px;
+  color: var(--muted);
 }
 
 .stat-time,
@@ -393,7 +452,7 @@ input[type="color"] {
   border: 1px dashed var(--border);
   border-radius: 10px;
   padding: 12px;
-  color: var(--muted);
+  color: var(--text);
   background: rgb(82, 82, 87);
 }
 
@@ -414,6 +473,7 @@ input[type="color"] {
 .planner-section {
   min-width: 0;
   width: 100%;
+  flex-shrink: 0;
 }
 
 .planner-wrapper {
@@ -521,7 +581,7 @@ input[type="color"] {
   width: 9px;
   min-width: 9px;
   max-width: 9px;
-  height: 30px;
+  height: 18px;
   padding: 0;
   font-size: 0;
 }
@@ -539,5 +599,11 @@ input[type="color"] {
 @media (max-width: 1400px) {
   .topbar {
     overflow-x: auto;
+  }
+}
+
+@media (max-width: 700px) {
+  .dashboard-top {
+    grid-template-columns: 1fr;
   }
 }

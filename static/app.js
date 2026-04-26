@@ -77,13 +77,16 @@ function saveState() {
 
 function bindEvents() {
   addTaskBtn.addEventListener("click", handleAddTask);
+  taskColorInput.addEventListener("change", handleTaskColorChange);
   eraserBtn.addEventListener("click", toggleEraserMode);
   blockModeBtn.addEventListener("click", toggleBlockMode);
   saveBtn.addEventListener("click", handleManualSave);
   clearPlanningBtn.addEventListener("click", clearPlanning);
 
-  document.addEventListener("mousedown", () => {
-    isMouseDown = true;
+  document.addEventListener("mousedown", (event) => {
+    if (event.button === 0) {
+      isMouseDown = true;
+    }
   });
 
   document.addEventListener("mouseup", () => {
@@ -99,7 +102,9 @@ function bindEvents() {
   });
 
   cells.forEach((cell) => {
-    cell.addEventListener("mousedown", () => {
+    cell.addEventListener("mousedown", (event) => {
+      if (event.button !== 0) return; // ignore tout sauf clic gauche
+
       if (state.blockMode) {
         handleBlockCellClick(cell);
         return;
@@ -147,6 +152,25 @@ function handleAddTask(event) {
   taskNameInput.focus();
 }
 
+function handleTaskColorChange() {
+  const task = state.tasks.find((t) => t.id === state.selectedTaskId);
+  if (!task) return;
+
+  task.color = taskColorInput.value;
+
+  for (const key in state.cells) {
+    if (state.cells[key].taskId === task.id) {
+      state.cells[key].color = task.color;
+    }
+  }
+
+  saveState();
+  renderTasks();
+  renderSelection();
+  renderCellsFromState();
+  renderStats();
+}
+
 function renderTasks() {
   tasksList.innerHTML = "";
 
@@ -158,18 +182,27 @@ function renderTasks() {
   state.tasks.forEach((task) => {
     const item = document.createElement("div");
     item.className = "task-item";
+    item.title = "Double-clic pour renommer";
 
-    if (task.id === state.selectedTaskId && !state.eraserMode) {
-      item.classList.add("selected");
-    }
+    item.addEventListener("dblclick", (event) => {
+      event.stopPropagation();
 
-    item.innerHTML = `
-      <span class="task-swatch" style="background:${task.color}"></span>
-      <span class="task-name">${escapeHtml(task.name)}</span>
-      <button class="task-delete-btn" type="button" title="Supprimer">✕</button>
-    `;
+      const newName = prompt("Renommer la tâche :", task.name);
 
-    item.addEventListener("click", () => {
+      if (newName && newName.trim() !== "") {
+        task.name = newName.trim();
+        saveState();
+        renderTasks();
+        renderSelection();
+        renderCellsFromState();
+        renderStats();
+        updateEraserButton();
+      }
+    });
+
+    item.addEventListener("click", (event) => {
+      if (event.detail > 1) return;
+
       state.selectedTaskId = task.id;
       state.eraserMode = false;
       saveState();
@@ -178,7 +211,17 @@ function renderTasks() {
       updateEraserButton();
     });
 
+    if (task.id === state.selectedTaskId && !state.eraserMode) {
+      item.classList.add("selected");
+    }
+
+    item.innerHTML = 
+      '<span class="task-swatch" style="background:' + task.color + '"></span>' +
+      '<span class="task-name">' + escapeHtml(task.name) + '</span>' +
+      '<button class="task-delete-btn" type="button" title="Supprimer">✕</button>';
+
     const deleteBtn = item.querySelector(".task-delete-btn");
+
     deleteBtn.addEventListener("click", (event) => {
       event.stopPropagation();
       deleteTask(task.id);
@@ -427,17 +470,18 @@ function updateCellTooltip(cell, cellData = null) {
   const hour = Number(cell.dataset.hour);
   const quarter = Number(cell.dataset.quarter || 0);
   const dayName = days[dayIndex] || "Jour inconnu";
+  const timeLabel = formatTime(hour, quarter);
 
-  if (!cellData || !cellData.name) {
-    const timeLabel = formatTime(hour, quarter);
+  if (!cellData || !cellData.taskId) {
     cell.title = `${dayName} - ${timeLabel}\nCase vide`;
     return;
   }
 
-  const timeLabel = formatTime(hour, quarter);
+  const task = state.tasks.find((t) => t.id === cellData.taskId);
+  const taskLabel = task ? task.name : "Tâche supprimée";
   const range = getTaskRangeForCell(cell, cellData.taskId);
 
-  cell.title = `${dayName} • ${timeLabel}\n${cellData.name}\n${range.start} → ${range.end}`;
+  cell.title = `${dayName} • ${timeLabel}\n${taskLabel}\n${range.start} → ${range.end}`;
 }
 
 function formatTime(hour, quarter) {

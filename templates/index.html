@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>timeblocks V4</title>
+  <title>timeblocks V5</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
 </head>
 <body>
   <header class="topbar">
     <div class="topbar-left">
-      <h1>Timeblocks V4</h1>
+      <h1>Timeblocks V5</h1>
       <div class="account-slot">TD</div>
     </div>
 
@@ -49,10 +49,26 @@
         Mode bloc : OFF
       </button>
 
-      <button id="save-btn" class="btn" type="button">Sauvegarder</button>
+      <select id="planning-select"></select>
+
+      <button id="update-planning-btn" class="btn" type="button">
+        Enregistrer modifications
+      </button>
+
+      <button id="delete-planning-btn" class="btn btn-danger" type="button">
+        Supprimer plan
+      </button>
+
+      <button id="rename-planning-btn" class="btn" type="button">
+        Renommer plan
+      </button>
 
       <button id="clear-planning-btn" class="btn btn-danger" type="button">
         Vider le planning
+      </button>
+
+      <button id="new-planning-btn" class="btn" type="button">
+        Nouveau plan
       </button>
     </div>
   </header>

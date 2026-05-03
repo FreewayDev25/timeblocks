@@ -79,3 +79,32 @@ Décisions :
 - plusieurs plannings
 - multi-plannings
 - amélioration visuelle
+
+=== V4 - TERMINÉE ===
+
+Fonctionnalités :
+- Planning hebdo interactif (15 min)
+- Création tâches avec couleur
+- Sélection + peinture des cases
+- Mode effacer
+- Mode bloc
+- Sauvegarde localStorage
+- Tooltip détaillé (heure + plage)
+- Statistiques en temps réel
+- Barre de progression hebdomadaire
+- Renommage tâche (double clic)
+- Modification couleur tâche (live)
+
+Corrections :
+- Tooltip non mis à jour après renommage → FIX
+- Statistiques non mises à jour → FIX
+- Drag clic droit bug → FIX
+
+UX :
+- Interface compacte (one screen)
+- Pas de refresh nécessaire
+
+Limites :
+- Un seul planning
+- Pas de raccourcis clavier
+- Prompt natif pour renommage

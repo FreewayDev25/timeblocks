@@ -25,7 +25,6 @@ const taskColorInput = document.getElementById("task-color");
 const tasksList = document.getElementById("tasks-list");
 const currentSelection = document.getElementById("current-selection");
 const eraserBtn = document.getElementById("eraser-btn");
-const saveBtn = document.getElementById("save-btn");
 const clearPlanningBtn = document.getElementById("clear-planning-btn");
 const planner = document.getElementById("planner");
 const cells = Array.from(document.querySelectorAll(".cell"));
@@ -35,6 +34,11 @@ const plannedTimeEl = document.getElementById("planned-time");
 const remainingTimeEl = document.getElementById("remaining-time");
 const plannedPercentEl = document.getElementById("planned-percent");
 const weekProgressFillEl = document.getElementById("week-progress-fill");
+const planningSelect = document.getElementById("planning-select");
+const deletePlanningBtn = document.getElementById("delete-planning-btn");
+const renamePlanningBtn = document.getElementById("rename-planning-btn");
+const updatePlanningBtn = document.getElementById("update-planning-btn");
+const newPlanningBtn = document.getElementById("new-planning-btn");
 
 init();
 
@@ -46,6 +50,7 @@ function init() {
   bindEvents();
   updateEraserButton();
   updateBlockModeButton();
+  updatePlanningList();
 }
 
 function loadState() {
@@ -75,13 +80,150 @@ function saveState() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
 
+function updateSelectedPlanning() {
+  const key = planningSelect.value;
+  if (!key) {
+    alert("Aucun planning sélectionné.");
+    return;
+  }
+
+  localStorage.setItem(key, JSON.stringify(state));
+  updatePlanningList(key);
+  alert("Modifications enregistrées.");
+}
+
+function loadSelectedPlanning() {
+  const key = planningSelect.value;
+  if (!key) return;
+
+  const data = localStorage.getItem(key);
+  if (!data) return;
+
+  state = JSON.parse(data);
+  saveState();
+
+  renderTasks();
+  renderSelection();
+  renderCellsFromState();
+  renderStats();
+  updateEraserButton();
+}
+
+function deleteSelectedPlanning() {
+  const key = planningSelect.value;
+  if (!key) return;
+
+  const name = key.replace("planning_", "");
+  const confirmed = confirm(`Supprimer définitivement le planning "${name}" ?`);
+
+  if (!confirmed) return;
+
+  localStorage.removeItem(key);
+  updatePlanningList();
+
+  const firstPlanKey = planningSelect.value;
+  if (firstPlanKey) {
+    loadSelectedPlanning();
+  }
+}
+
+function updatePlanningList(selectedKey = null) {
+  planningSelect.innerHTML = "";
+
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+
+    if (!key.startsWith("planning_")) continue;
+
+    const option = document.createElement("option");
+    option.value = key;
+    option.textContent = key.replace("planning_", "");
+
+    planningSelect.appendChild(option);
+  }
+
+  if (selectedKey) {
+    planningSelect.value = selectedKey;
+  }
+}
+
+function renameSelectedPlanning() {
+  const oldKey = planningSelect.value;
+  if (!oldKey) return;
+
+  const oldName = oldKey.replace("planning_", "");
+  const newName = prompt("Nouveau nom du planning :", oldName);
+
+  if (!newName) return;
+
+  const cleanName = newName.trim();
+  if (!cleanName || cleanName === oldName) return;
+
+  const newKey = "planning_" + cleanName;
+
+  if (localStorage.getItem(newKey)) {
+    const confirmed = confirm("Un planning avec ce nom existe déjà. Le remplacer ?");
+    if (!confirmed) return;
+  }
+
+  const data = localStorage.getItem(oldKey);
+  if (!data) return;
+
+  localStorage.setItem(newKey, data);
+  localStorage.removeItem(oldKey);
+
+  updatePlanningList(newKey);
+  loadSelectedPlanning();
+}
+
+function createNewPlanning() {
+  const confirmed = confirm("Créer un nouveau planning vide ?");
+
+  if (!confirmed) return;
+
+  const name = prompt("Nom du nouveau planning ?");
+  if (!name) return;
+
+  const cleanName = name.trim();
+  if (!cleanName) return;
+
+  const key = "planning_" + cleanName;
+
+  if (localStorage.getItem(key)) {
+    const overwrite = confirm("Un planning avec ce nom existe déjà. Le remplacer ?");
+    if (!overwrite) return;
+  }
+
+  state = {
+    tasks: [],
+    cells: {},
+    selectedTaskId: null,
+    eraserMode: false,
+    blockMode: false
+  };
+
+  localStorage.setItem(key, JSON.stringify(state));
+  saveState();
+
+  updatePlanningList(key);
+  renderTasks();
+  renderSelection();
+  renderCellsFromState();
+  renderStats();
+  updateEraserButton();
+}
+
 function bindEvents() {
   addTaskBtn.addEventListener("click", handleAddTask);
   taskColorInput.addEventListener("change", handleTaskColorChange);
   eraserBtn.addEventListener("click", toggleEraserMode);
   blockModeBtn.addEventListener("click", toggleBlockMode);
-  saveBtn.addEventListener("click", handleManualSave);
   clearPlanningBtn.addEventListener("click", clearPlanning);
+  planningSelect.addEventListener("change", loadSelectedPlanning);
+  deletePlanningBtn.addEventListener("click", deleteSelectedPlanning);
+  renamePlanningBtn.addEventListener("click", renameSelectedPlanning);
+  updatePlanningBtn.addEventListener("click", updateSelectedPlanning);
+  newPlanningBtn.addEventListener("click", createNewPlanning);
 
   document.addEventListener("mousedown", (event) => {
     if (event.button === 0) {
@@ -153,6 +295,8 @@ function handleAddTask(event) {
 }
 
 function handleTaskColorChange() {
+  if (taskNameInput.value.trim() !== "") return;
+
   const task = state.tasks.find((t) => t.id === state.selectedTaskId);
   if (!task) return;
 
@@ -635,11 +779,6 @@ function clearPlanning() {
   saveState();
   renderCellsFromState();
   renderStats();
-}
-
-function handleManualSave() {
-  saveState();
-  alert("Planning sauvegardé en local.");
 }
 
 function escapeHtml(value) {

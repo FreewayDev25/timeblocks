@@ -43,6 +43,7 @@ const newPlanningBtn = document.getElementById("new-planning-btn");
 init();
 
 function init() {
+  ensureDefaultPlanning();
   renderTasks();
   renderSelection();
   renderCellsFromState();
@@ -50,7 +51,7 @@ function init() {
   bindEvents();
   updateEraserButton();
   updateBlockModeButton();
-  updatePlanningList();
+  updatePlanningList("planning_Planning par défaut");
 }
 
 function loadState() {
@@ -78,6 +79,26 @@ function loadState() {
 
 function saveState() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function ensureDefaultPlanning() {
+  let hasPlanning = false;
+
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+
+    if (key && key.startsWith("planning_")) {
+      hasPlanning = true;
+      break;
+    }
+  }
+
+  if (hasPlanning) return;
+
+  const defaultPlanningKey = "planning_Planning par défaut";
+
+  localStorage.setItem(defaultPlanningKey, JSON.stringify(state));
+  saveState();
 }
 
 function updateSelectedPlanning() {
